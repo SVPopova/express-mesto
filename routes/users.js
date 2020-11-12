@@ -1,10 +1,16 @@
-const router = require('express').Router();
 const path = require('path');
+const router = require('express').Router();
+
 const jsonDataPath = path.join(__dirname, '..', 'data', 'users.json');
 const readFile = require('../utils/read-file.js');
 
 router.get('/users', (req, res) => {
-  readFile(jsonDataPath).then((data) => res.send(data));
+  readFile(jsonDataPath)
+    .then((data) => res.send(data))
+    .catch((err) => {
+      console.error('err = ', err);
+      res.status(500).send({ message: 'Ошибка на сервере' });
+    });
 });
 
 router.get('/users/:id', (req, res) => {
@@ -18,7 +24,7 @@ router.get('/users/:id', (req, res) => {
       if (!user) {
         return res.status(404).send({ message: 'Нет пользователя с таким id' });
       }
-      res.send(user);
+      return res.send(user);
     })
     .catch((err) => {
       console.error('err = ', err);
