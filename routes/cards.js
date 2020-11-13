@@ -1,15 +1,58 @@
-const path = require('path');
 const router = require('express').Router();
 
-const readFile = require('../utils/read-file');
+const Card = require('../models/card');
 
-const jsonDataPath = path.join(__dirname, '..', 'data', 'cards.json');
 router.get('/cards', (req, res) => {
-  readFile(jsonDataPath)
-    .then((data) => res.send(data))
+  Card.find({})
+    .then((card) => res.send({ data: card }))
     .catch((err) => {
       console.error('err = ', err);
-      res.status(500).send({ message: 'Ошибка на сервере' });
+      return res.status(500).send({ message: 'Произошла ошибка' });
+    });
+});
+
+router.post('/cards', (req, res) => {
+  const owner = req.user._id;
+  Card.create({ owner, ...req.body })
+    .then((card) => res.send({ data: card }))
+    .catch((err) => {
+      console.error('err = ', err);
+      return res.status(500).send({ message: 'Произошла ошибка' });
+    });
+});
+
+router.delete('/cards/:cardId', (req, res) => {
+  Card.findByIdAndRemove(req.params.cardId)
+    .then((card) => res.send({ data: card }))
+    .catch((err) => {
+      console.error('err = ', err);
+      return res.status(500).send({ message: 'Произошла ошибка' });
+    });
+});
+
+router.put('/cards/:cardId/likes', (req, res) => {
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $addToSet: { likes: req.user._id } },
+    { new: true },
+  )
+    .then((card) => res.send({ data: card }))
+    .catch((err) => {
+      console.error('err = ', err);
+      return res.status(500).send({ message: 'Произошла ошибка' });
+    });
+});
+
+router.delete('/cards/:cardId/likes', (req, res) => {
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $pull: { likes: req.user._id } },
+    { new: true },
+  )
+    .then((card) => res.send({ data: card }))
+    .catch((err) => {
+      console.error('err = ', err);
+      return res.status(500).send({ message: 'Произошла ошибка' });
     });
 });
 
