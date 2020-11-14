@@ -2,26 +2,41 @@ const User = require('../models/user');
 
 module.exports.findUser = (req, res) => {
   User.find({})
-    .then((user) => res.send({ data: user }))
+    .then((user) => {
+      if (!user) return res.status(404).send({ message: 'Переданы некорректные данные' });
+      res.send({ data: user });
+      })
     .catch((err) => {
       console.error('err = ', err);
+      if (err.name === 'DocumentNotFoundError') return res.status(404).send({ message: 'Переданы некорректные данные' });
+      if (err.name === 'CastError' || 'ValidationError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
       return res.status(500).send({ message: 'Произошла ошибка' });
     });
 };
 module.exports.findUserById = (req, res) => {
   User.findById(req.params.id)
-    .then((user) => res.send({ data: user }))
+    .then((user) => {
+      if (!user) return res.status(404).send({ message: 'Переданы некорректные данные' });
+      res.send({ data: user });
+      })
     .catch((err) => {
       console.error('err = ', err);
+      if (err.name === 'DocumentNotFoundError') return res.status(404).send({ message: 'Переданы некорректные данные' });
+      if (err.name === 'CastError' || 'ValidationError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
       return res.status(500).send({ message: 'Произошла ошибка' });
     });
 };
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
-    .then((user) => res.send({ data: user }))
+    .then((user) => {
+      if (!user) return res.status(404).send({ message: 'Переданы некорректные данные' });
+      res.send({ data: user });
+      })
     .catch((err) => {
       console.error('err = ', err);
+      if (err.name === 'DocumentNotFoundError') return res.status(404).send({ message: 'Переданы некорректные данные' });
+      if (err.name === 'CastError' || 'ValidationError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
       return res.status(500).send({ message: 'Произошла ошибка' });
     });
 };
@@ -33,11 +48,16 @@ module.exports.updateUser = (req, res) => {
     runValidators: true,
     upsert: false,
   })
-    .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      console.error('err = ', err);
-      return res.status(500).send({ message: 'Произошла ошибка' });
-    });
+  .then((user) => {
+    if (!user) return res.status(404).send({ message: 'Переданы некорректные данные' });
+    res.send({ data: user });
+    })
+  .catch((err) => {
+    console.error('err = ', err);
+    if (err.name === 'DocumentNotFoundError') return res.status(404).send({ message: 'Переданы некорректные данные' });
+    if (err.name === 'CastError' || 'ValidationError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
+    return res.status(500).send({ message: 'Произошла ошибка' });
+  });
 };
 module.exports.updateUserAvatar = (req, res) => {
   const me = req.user._id;
@@ -47,9 +67,14 @@ module.exports.updateUserAvatar = (req, res) => {
     runValidators: true,
     upsert: false,
   })
-    .then((user) => res.send({ data: user }))
+    .then((user) => {
+      if (!user) return res.status(404).send({ message: 'Переданы некорректные данные' });
+      res.send({ data: user });
+      })
     .catch((err) => {
       console.error('err = ', err);
+      if (err.name === 'DocumentNotFoundError') return res.status(404).send({ message: 'Переданы некорректные данные' });
+      if (err.name === 'CastError' || 'ValidationError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
       return res.status(500).send({ message: 'Произошла ошибка' });
     });
 };

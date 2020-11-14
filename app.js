@@ -1,4 +1,3 @@
-const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -16,7 +15,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
   req.user = {
@@ -26,11 +24,6 @@ app.use((req, res, next) => {
   next();
 });
 app.use('/', routes);
-app.use('/', (req, res, err) => {
-  if (err.name === 'Not Found') return res.status(404).send({ message: 'Переданы некорректные данные' });
-  if (err.name === 'Bad Request') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
-  return res.status(500).send({ message: 'Произошла ошибка' });
-});
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
