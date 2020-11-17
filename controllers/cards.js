@@ -4,12 +4,11 @@ module.exports.findCard = (req, res) => {
   Card.find({})
     .then((card) => {
       if (!card) return res.status(404).send({ message: 'Переданы некорректные данные' });
-      res.send({ data: card });
+      return res.send({ data: card });
     })
     .catch((err) => {
       console.error('err = ', err);
-      if (err.name === 'DocumentNotFoundError') return res.status(404).send({ message: 'Переданы некорректные данные' });
-      if (err.name === 'CastError' || 'ValidationError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
+      if (err.name === 'CastError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
       return res.status(500).send({ message: 'Произошла ошибка' });
     });
 };
@@ -18,12 +17,11 @@ module.exports.createCard = (req, res) => {
   Card.create({ owner, ...req.body })
     .then((card) => {
       if (!card) return res.status(404).send({ message: 'Переданы некорректные данные' });
-      res.send({ data: card });
+      return res.send({ data: card });
     })
     .catch((err) => {
       console.error('err = ', err);
-      if (err.name === 'DocumentNotFoundError') return res.status(404).send({ message: 'Переданы некорректные данные' });
-      if (err.name === 'CastError' || 'ValidationError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
+      if (err.name === 'ValidationError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
       return res.status(500).send({ message: 'Произошла ошибка' });
     });
 };
@@ -31,12 +29,11 @@ module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) return res.status(404).send({ message: 'Переданы некорректные данные' });
-      res.send({ data: card });
+      return res.send({ data: card });
     })
     .catch((err) => {
       console.error('err = ', err);
-      if (err.name === 'DocumentNotFoundError') return res.status(404).send({ message: 'Переданы некорректные данные' });
-      if (err.name === 'CastError' || 'ValidationError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
+      if (err.name === 'CastError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
       return res.status(500).send({ message: 'Произошла ошибка' });
     });
 };
@@ -48,12 +45,11 @@ module.exports.likeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) return res.status(404).send({ message: 'Переданы некорректные данные' });
-      res.send({ data: card });
+      return res.send({ data: card });
     })
     .catch((err) => {
       console.error('err = ', err);
-      if (err.name === 'DocumentNotFoundError') return res.status(404).send({ message: 'Переданы некорректные данные' });
-      if (err.name === 'CastError' || 'ValidationError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
+      if (err.name === 'CastError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
       return res.status(500).send({ message: 'Произошла ошибка' });
     });
 };
@@ -65,12 +61,11 @@ module.exports.deleteLikeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) return res.status(404).send({ message: 'Переданы некорректные данные' });
-      res.send({ data: card });
+      return res.send({ data: card });
     })
     .catch((err) => {
       console.error('err = ', err);
-      if (err.name === 'DocumentNotFoundError') return res.status(404).send({ message: 'Переданы некорректные данные' });
-      if (err.name === 'CastError' || 'ValidationError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
+      if (err.name === 'CastError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
       return res.status(500).send({ message: 'Произошла ошибка' });
     });
 };

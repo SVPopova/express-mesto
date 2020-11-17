@@ -4,12 +4,11 @@ module.exports.findUser = (req, res) => {
   User.find({})
     .then((user) => {
       if (!user) return res.status(404).send({ message: 'Переданы некорректные данные' });
-      res.send({ data: user });
-      })
+      return res.send({ data: user });
+    })
     .catch((err) => {
       console.error('err = ', err);
-      if (err.name === 'DocumentNotFoundError') return res.status(404).send({ message: 'Переданы некорректные данные' });
-      if (err.name === 'CastError' || 'ValidationError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
+      if (err.name === 'CastError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
       return res.status(500).send({ message: 'Произошла ошибка' });
     });
 };
@@ -17,12 +16,12 @@ module.exports.findUserById = (req, res) => {
   User.findById(req.params.id)
     .then((user) => {
       if (!user) return res.status(404).send({ message: 'Переданы некорректные данные' });
-      res.send({ data: user });
-      })
+
+      return res.send({ data: user });
+    })
     .catch((err) => {
       console.error('err = ', err);
-      if (err.name === 'DocumentNotFoundError') return res.status(404).send({ message: 'Переданы некорректные данные' });
-      if (err.name === 'CastError' || 'ValidationError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
+      if (err.name === 'CastError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
       return res.status(500).send({ message: 'Произошла ошибка' });
     });
 };
@@ -31,12 +30,11 @@ module.exports.createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => {
       if (!user) return res.status(404).send({ message: 'Переданы некорректные данные' });
-      res.send({ data: user });
-      })
+      return res.send({ data: user });
+    })
     .catch((err) => {
       console.error('err = ', err);
-      if (err.name === 'DocumentNotFoundError') return res.status(404).send({ message: 'Переданы некорректные данные' });
-      if (err.name === 'CastError' || 'ValidationError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
+      if (err.name === 'ValidationError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
       return res.status(500).send({ message: 'Произошла ошибка' });
     });
 };
@@ -48,16 +46,15 @@ module.exports.updateUser = (req, res) => {
     runValidators: true,
     upsert: false,
   })
-  .then((user) => {
-    if (!user) return res.status(404).send({ message: 'Переданы некорректные данные' });
-    res.send({ data: user });
+    .then((user) => {
+      if (!user) return res.status(404).send({ message: 'Переданы некорректные данные' });
+      return res.send({ data: user });
     })
-  .catch((err) => {
-    console.error('err = ', err);
-    if (err.name === 'DocumentNotFoundError') return res.status(404).send({ message: 'Переданы некорректные данные' });
-    if (err.name === 'CastError' || 'ValidationError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
-    return res.status(500).send({ message: 'Произошла ошибка' });
-  });
+    .catch((err) => {
+      console.error('err = ', err);
+      if (err.name === 'ValidationError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
+      return res.status(500).send({ message: 'Произошла ошибка' });
+    });
 };
 module.exports.updateUserAvatar = (req, res) => {
   const me = req.user._id;
@@ -69,12 +66,11 @@ module.exports.updateUserAvatar = (req, res) => {
   })
     .then((user) => {
       if (!user) return res.status(404).send({ message: 'Переданы некорректные данные' });
-      res.send({ data: user });
-      })
+      return res.send({ data: user });
+    })
     .catch((err) => {
       console.error('err = ', err);
-      if (err.name === 'DocumentNotFoundError') return res.status(404).send({ message: 'Переданы некорректные данные' });
-      if (err.name === 'CastError' || 'ValidationError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
+      if (err.name === 'ValidationError') return res.status(400).send({ message: 'Запрашиваемый ресурс не найден' });
       return res.status(500).send({ message: 'Произошла ошибка' });
     });
 };
